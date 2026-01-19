@@ -1,6 +1,6 @@
-# meta developer: @memikami
+# meta developer: @Xpansee , @Sy4enish
 """
-    📝 Sy4enishQuotes - Цитаты из канала "Sy4enish"
+    📝 Sy4Quotes - Цитаты из канала "Sy4enish"
     
     Модуль для получения случайной цитаты из Telegram-канала @quotesSy4enish
     и генерации парных цитат с помощью Google Gemini.
