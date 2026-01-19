@@ -1,4 +1,4 @@
-# meta developer: @memikami, @Sy4enish
+# meta developer: @Xpansee, @Sy4enish
 from .. import loader, utils
 from telethon.tl.types import MessageMediaPhoto, MessageMediaDocument
 
