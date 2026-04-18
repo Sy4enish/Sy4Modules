@@ -1,4 +1,5 @@
 # meta developer: @Sy4enish
+# перед скачиванием (либо после) в терминал вписать « echo "google-generativeai" >> requirements.txt» и « echo "markdown-it-py" >> requirements.txt »
 from .. import loader, utils
 import logging
 
@@ -50,15 +51,38 @@ class GeminiResponderMod(loader.Module):
             ),
         )
         self.me_id = None
+        self.model = None # Инициализируем модель здесь
 
     async def client_ready(self, client, db):
         self._client = client
         self.me_id = (await client.get_me()).id
+        
         if not genai:
+            logger.error(self.strings("no_lib"))
+            # Можно отправить сообщение пользователю, если юзербот поддерживает
             await utils.answer(
-                await client.send_message("me", "Please install google-generativeai"),
+                await client.send_message("me", "Please install google-generativeai library for GeminiResponder to work. Command: pip install google-generativeai"),
                 "pip install google-generativeai"
             )
+            return
+
+        await self._configure_gemini() # Вызываем конфигурацию при запуске
+
+    async def _configure_gemini(self):
+        """Конфигурирует Gemini API и инициализирует модель."""
+        if not self.config["api_key"]:
+            logger.warning(self.strings("no_api"))
+            self.model = None
+            return
+        
+        try:
+            genai.configure(api_key=self.config["api_key"])
+            self.model = genai.GenerativeModel(self.config["model_name"])
+            logger.info(f"Gemini model {self.config['model_name']} configured successfully.")
+        except Exception as e:
+            logger.error(f"Failed to configure Gemini API or model: {e}")
+            self.model = None
+            await self._client.send_message("me", f"<b>[GeminiResponder]</b> Ошибка конфигурации API Gemini: {e}. Проверьте ваш ключ и модель.")
 
     @loader.command(
         ru_doc="Переключить режим автоответчика",
@@ -73,10 +97,15 @@ class GeminiResponderMod(loader.Module):
     @loader.watcher(only_messages=True)
     async def watcher(self, message):
         # Basic checks
-        if not self.config["enabled"] or not self.config["api_key"]:
+        if not self.config["enabled"]:
             return
         
-        if not genai:
+        if not self.model: # Проверяем, инициализирована ли модель
+            # Логируем, если ключ отсутствует или модель не сконфигурирована
+            if not self.config["api_key"]:
+                logger.warning(self.strings("no_api"))
+            else:
+                logger.warning("Gemini model is not initialized, skipping auto-reply.")
             return
             
         if self.me_id is None:
@@ -102,11 +131,8 @@ class GeminiResponderMod(loader.Module):
         if message.text.startswith((".", "/", "!")):
             return
 
-        # Configure AI
+        # Configure AI (removed from here, now in _configure_gemini)
         try:
-            genai.configure(api_key=self.config["api_key"])
-            model = genai.GenerativeModel(self.config["model_name"])
-            
             # Construct prompt
             # We send the system prompt + user message
             full_prompt = (
@@ -117,13 +143,14 @@ class GeminiResponderMod(loader.Module):
 
             # Send typing action
             async with message.client.action(message.chat_id, "typing"):
-                response = await model.generate_content_async(full_prompt)
+                response = await self.model.generate_content_async(full_prompt) # Используем self.model
                 response_text = response.text
 
             # Reply to the user
             await message.reply(response_text)
 
         except Exception as e:
-            logger.error(f"Gemini Error: {e}")
+            logger.error(f"Gemini Error during response generation: {e}")
             # Optional: Send error to logs or self, but better to keep silent in chat to avoid spam
+            # await message.client.send_message("me", f"<b>[GeminiResponder]</b> Произошла ошибка при генерации ответа: {e}")
             pass
