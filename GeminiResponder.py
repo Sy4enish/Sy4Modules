@@ -19,7 +19,12 @@ class GeminiResponderMod(loader.Module):
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-            "API_KEY", "", "api ключ (скрыт)",
+          loader.ConfigValue(
+                "API_KEY",
+                "",
+                "api ключ",
+                validator=loader.validators.Hidden()
+            ),
             "CHATS", [], "список айди чатов",
             "SYSTEM_PROMPT", "ты бот", "инструкция",
             "MODEL", "gemini-3-pro-preview", "название модели",
