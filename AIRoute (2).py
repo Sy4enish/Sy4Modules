@@ -1,7 +1,7 @@
-# meta developer: @Sy4enish, @Sy4dev, @SKBerryXXX, @Rxmie
+# meta developer's: @Sy4enish, @SKBerryXXX
 # meta name: AIRoute Ultimate
-# meta description: Тотальное доминирование над всеми AI модулями
-
+# meta description: навайбкодил хуйню,взял идею у @cachxd
+ 
 import asyncio
 import base64
 import io
