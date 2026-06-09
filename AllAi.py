@@ -1,7 +1,7 @@
-# meta developer's: @Sy4enish, @SKBerryXXX
-# meta name: AIRoute Ultimate
-# meta description: навайбкодил хуйню,взял идею у @cachxd
- 
+# meta developer: @Sy4enish , @SKBerryXXX
+# meta name: AllAi
+# meta banner: https://github.com/Sy4enish/Sy4Modules/blob/main/IMG_20260609_074927_794.jpg
+
 import asyncio
 import base64
 import io
