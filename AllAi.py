@@ -1,6 +1,5 @@
 # meta developer: @Sy4enish , @SKBerryXXX
 # meta name: AllAi
-# meta banner: https://github.com/Sy4enish/Sy4Modules/blob/main/IMG_20260609_074927_794.jpg
 
 import asyncio
 import base64
@@ -146,11 +145,11 @@ AGENT_TOOLS_SYSTEM = """
 
 
 @loader.tds
-class AIRouteUltimateMod(loader.Module):
+class AllAi(loader.Module):
     """Мульти-провайдерный AI-модуль с агентами, шагами и инлайн-управлением"""
 
     strings = {
-        "name": "AIRoute",
+        "name": "AllAi",
         "processing": "<tg-emoji emoji-id=5776213190387961618>🕓</tg-emoji> <b>Обработка...</b>",
         "no_key": "<tg-emoji emoji-id=5879813604068298387>❗️</tg-emoji> <b>Ключ API не найден!</b>",
         "error": "<tg-emoji emoji-id=5778527486270770928>❌</tg-emoji> <b>Ошибка:</b> <code>{}</code>",
